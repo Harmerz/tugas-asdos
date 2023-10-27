@@ -10,17 +10,14 @@ export const resolvers = {
         const session = await getLoginSession(context.req)
 
         if (session) {
-          return findUser({ email: session.email })
+          return findUser({ username: session.username })
         }
       } catch (error) {
-        throw new GraphQLError(
-          'Authentication token is invalid, please log in',
-          {
-            extensions: {
-              code: 'UNAUTHENTICATED',
-            },
-          }
-        )
+        throw new GraphQLError('Authentication token is invalid, please log in', {
+          extensions: {
+            code: 'UNAUTHENTICATED',
+          },
+        })
       }
     },
   },
@@ -30,12 +27,12 @@ export const resolvers = {
       return { user }
     },
     async signIn(_parent, args, context, _info) {
-      const user = await findUser({ email: args.input.email })
-
+      const user = await findUser({ username: args.input.username })
+      console.log(user)
       if (user && (await validatePassword(user, args.input.password))) {
         const session = {
           id: user.id,
-          email: user.email,
+          username: user.username,
         }
 
         await setLoginSession(context.res, session)
@@ -43,7 +40,7 @@ export const resolvers = {
         return { user }
       }
 
-      throw new GraphQLError('Invalid email and password combination')
+      throw new GraphQLError('Invalid username and password combination')
     },
     async signOut(_parent, _args, context, _info) {
       removeTokenCookie(context.res)

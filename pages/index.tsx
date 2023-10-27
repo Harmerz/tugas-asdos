@@ -2,12 +2,13 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { gql, useQuery } from '@apollo/client'
+import { io } from 'socket.io-client'
 
 const ViewerQuery = gql`
   query ViewerQuery {
     viewer {
       id
-      email
+      username
     }
   }
 `
@@ -32,8 +33,7 @@ const Index = () => {
   if (viewer) {
     return (
       <div>
-        You're signed in as {viewer.email}. Go to{' '}
-        <Link href="/about">about</Link> page or{' '}
+        You're signed in as {viewer.username}. Go to <Link href="/about">about</Link> page or{' '}
         <Link href="/signout">signout</Link>.
       </div>
     )

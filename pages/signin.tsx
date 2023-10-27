@@ -1,17 +1,16 @@
-import { useState } from 'react'
 import { useRouter } from 'next/router'
-import Link from 'next/link'
+import { useState } from 'react'
 import { gql } from '@apollo/client'
 import { useMutation, useApolloClient } from '@apollo/client'
 import { getErrorMessage } from '../lib/form'
 import Field from '../components/field'
 
 const SignInMutation = gql`
-  mutation SignInMutation($email: String!, $password: String!) {
-    signIn(input: { email: $email, password: $password }) {
+  mutation SignInMutation($username: String!, $password: String!) {
+    signIn(input: { username: $username, password: $password }) {
       user {
         id
-        email
+        username
       }
     }
   }
@@ -26,17 +25,18 @@ function SignIn() {
   async function handleSubmit(event) {
     event.preventDefault()
 
-    const emailElement = event.currentTarget.elements.email
+    const usernameElement = event.currentTarget.elements.username
     const passwordElement = event.currentTarget.elements.password
 
     try {
       await client.resetStore()
       const { data } = await signIn({
         variables: {
-          email: emailElement.value,
+          username: usernameElement.value,
           password: passwordElement.value,
         },
       })
+      console.log(data)
       if (data.signIn.user) {
         await router.push('/')
       }
@@ -46,28 +46,44 @@ function SignIn() {
   }
 
   return (
-    <>
-      <h1>Sign In</h1>
-      <form onSubmit={handleSubmit}>
-        {errorMsg && <p>{errorMsg}</p>}
-        <Field
-          name="email"
-          type="email"
-          autoComplete="email"
-          required
-          label="Email"
-        />
-        <Field
-          name="password"
-          type="password"
-          autoComplete="password"
-          required
-          label="Password"
-        />
-        <button type="submit">Sign in</button> or{' '}
-        <Link href="/signup">Sign up</Link>
-      </form>
-    </>
+    <div className="flex h-screen w-full flex-col items-center justify-center gap-16">
+      <div className="text-center">
+        <h1 className="text-3xl font-bold">Sign In</h1>
+        <h2 className="text-base">Tugas Ethical Hacking</h2>
+      </div>
+      <div className="flex w-fit flex-col">
+        <form onSubmit={handleSubmit}>
+          {errorMsg && (
+            <div className=" bg-red-600 px-2 py-3 text-white">
+              <p>{errorMsg}</p>
+            </div>
+          )}
+
+          <Field
+            name="username"
+            type="username"
+            autoComplete="username"
+            required
+            label="username"
+          />
+          <Field
+            name="password"
+            type="password"
+            autoComplete="password"
+            required
+            label="Password"
+          />
+          <div className="mt-4 flex w-full justify-center">
+            <button
+              type="submit"
+              className="mx-auto mt-4 w-40 rounded-full bg-blue-400 px-5 py-3 font-bold text-white shadow-xl"
+            >
+              Sign in
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   )
 }
 
