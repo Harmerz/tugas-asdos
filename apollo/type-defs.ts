@@ -5,6 +5,7 @@ export const typeDefs = gql`
     id: ID!
     username: String!
     createdAt: Int!
+    Name: String!
   }
 
   input SignUpInput {

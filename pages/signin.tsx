@@ -11,6 +11,7 @@ const SignInMutation = gql`
       user {
         id
         username
+        Name
       }
     }
   }

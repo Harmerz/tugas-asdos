@@ -10,6 +10,7 @@ const ViewerQuery = gql`
     viewer {
       id
       username
+      Name
     }
   }
 `
@@ -35,7 +36,7 @@ const Index = () => {
     return (
       <div className="flex h-screen flex-col items-center justify-center">
         <div className="h-12 w-full text-center text-xl">
-          You're signed in as <span className="font-bold text-blue-500">{viewer.username}</span>
+          You're signed in as <span className="font-bold text-blue-500">{viewer.Name}</span>
         </div>
         <button
           key="Logout"
